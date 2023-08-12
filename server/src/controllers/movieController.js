@@ -1,23 +1,21 @@
 import Movie from "../models/movie.js";
-import successResponse from "../utils/responseHandlers";
-import pkg from 'http-errors';
+import { successResponse } from "../utils/responseHandlers.js";
+import createError from "http-errors";
 import { addNewMovieService } from "../service/movieService.js";
-
-const { createError } = pkg;
 
 export const addNewMovie = async (req, res, next) => {
   try {
-    const image = req.file;
+    const poster = req.file;
 
     const newMovie = new Movie({
       ...req.body,
-      image: image?.filename,
+      poster: poster?.filename,
     });
 
     await addNewMovieService(newMovie);
 
-    return successResponse(res, 200, "Movie successfully added", newMovie);
+    return successResponse(res, 200, "Successfully Added", newMovie);
   } catch (error) {
-    createError(400, "unsuccessful");
+    next(error);
   }
 };

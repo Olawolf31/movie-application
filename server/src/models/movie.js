@@ -19,7 +19,7 @@ const movieSchema = new Schema({
   year: {
     type: Number,
   },
-  image:{
+  poster:{
     type: String
   }
 });

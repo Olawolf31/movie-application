@@ -3,18 +3,15 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 import dev from "./config/index.js";
 import connectDB from "../src/config/db.js";
-import pkg from 'http-errors';
 import movieRouter from "./routes/movieRoutes.js";
-
-
-const { createError } = pkg;
-
+import createError from "http-errors";
+import { errorResponse } from "./utils/responseHandlers.js";
 
 const app = express();
 const PORT = dev.app.port;
 
 app.use(morgan("dev"));
-app.use(express.json())
+app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -28,10 +25,15 @@ app.get("/api", (req, res) => {
 });
 
 //server side error
-app.use((req, res, next) => {
-    next(createError(404, "Not Found"));
-  });
-  
+
+app.use((err, req, res, next) => {
+  // Handle errors and send responses using errorResponse
+  errorResponse(
+    res,
+    err.statusCode || 500,
+    err.message || "Internal Server Error"
+  );
+});
 
 //movie routes
 app.use("/api/movies", movieRouter);
