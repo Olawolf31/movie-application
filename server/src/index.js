@@ -4,8 +4,8 @@ import morgan from "morgan";
 import dev from "./config/index.js";
 import connectDB from "../src/config/db.js";
 import movieRouter from "./routes/movieRoutes.js";
-import createError from "http-errors";
 import { errorResponse } from "./utils/responseHandlers.js";
+import cors from 'cors'
 
 const app = express();
 const PORT = dev.app.port;
@@ -14,6 +14,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("Hello World");
